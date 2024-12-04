@@ -1,9 +1,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var startExam = false
+
     var body: some View {
         ZStack {
-            // Background color
             Color(UIColor.systemBackground)
                 .ignoresSafeArea()
             
@@ -29,7 +30,7 @@ struct ContentView: View {
                 
                 // Main action button
                 Button(action: {
-                    // Add your eye exam start logic here
+                    startExam = true
                 }) {
                     Text("Start Eye Exam")
                         .font(.system(size: 20, weight: .semibold))
@@ -44,6 +45,9 @@ struct ContentView: View {
                 }
                 .padding(.horizontal, 40)
                 .padding(.bottom, 50)
+                .fullScreenCover(isPresented: $startExam) {
+                    DistanceCheckView()
+                }
             }
         }
     }
