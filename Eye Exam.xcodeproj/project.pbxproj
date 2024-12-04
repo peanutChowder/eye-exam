@@ -1,0 +1,557 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		739E6B182D00F4E7005D6D41 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 739E6AFF2D00F4E6005D6D41 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 739E6B062D00F4E6005D6D41;
+			remoteInfo = "Eye Exam";
+		};
+		739E6B222D00F4E7005D6D41 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 739E6AFF2D00F4E6005D6D41 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 739E6B062D00F4E6005D6D41;
+			remoteInfo = "Eye Exam";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		739E6B072D00F4E6005D6D41 /* Eye Exam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Eye Exam.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		739E6B172D00F4E7005D6D41 /* Eye ExamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Eye ExamTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		739E6B212D00F4E7005D6D41 /* Eye ExamUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Eye ExamUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		739E6B092D00F4E6005D6D41 /* Eye Exam */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Eye Exam";
+			sourceTree = "<group>";
+		};
+		739E6B1A2D00F4E7005D6D41 /* Eye ExamTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Eye ExamTests";
+			sourceTree = "<group>";
+		};
+		739E6B242D00F4E7005D6D41 /* Eye ExamUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Eye ExamUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		739E6B042D00F4E6005D6D41 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		739E6B142D00F4E7005D6D41 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		739E6B1E2D00F4E7005D6D41 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		739E6AFE2D00F4E6005D6D41 = {
+			isa = PBXGroup;
+			children = (
+				739E6B092D00F4E6005D6D41 /* Eye Exam */,
+				739E6B1A2D00F4E7005D6D41 /* Eye ExamTests */,
+				739E6B242D00F4E7005D6D41 /* Eye ExamUITests */,
+				739E6B082D00F4E6005D6D41 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		739E6B082D00F4E6005D6D41 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				739E6B072D00F4E6005D6D41 /* Eye Exam.app */,
+				739E6B172D00F4E7005D6D41 /* Eye ExamTests.xctest */,
+				739E6B212D00F4E7005D6D41 /* Eye ExamUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		739E6B062D00F4E6005D6D41 /* Eye Exam */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 739E6B2B2D00F4E7005D6D41 /* Build configuration list for PBXNativeTarget "Eye Exam" */;
+			buildPhases = (
+				739E6B032D00F4E6005D6D41 /* Sources */,
+				739E6B042D00F4E6005D6D41 /* Frameworks */,
+				739E6B052D00F4E6005D6D41 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				739E6B092D00F4E6005D6D41 /* Eye Exam */,
+			);
+			name = "Eye Exam";
+			packageProductDependencies = (
+			);
+			productName = "Eye Exam";
+			productReference = 739E6B072D00F4E6005D6D41 /* Eye Exam.app */;
+			productType = "com.apple.product-type.application";
+		};
+		739E6B162D00F4E7005D6D41 /* Eye ExamTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 739E6B2E2D00F4E7005D6D41 /* Build configuration list for PBXNativeTarget "Eye ExamTests" */;
+			buildPhases = (
+				739E6B132D00F4E7005D6D41 /* Sources */,
+				739E6B142D00F4E7005D6D41 /* Frameworks */,
+				739E6B152D00F4E7005D6D41 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				739E6B192D00F4E7005D6D41 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				739E6B1A2D00F4E7005D6D41 /* Eye ExamTests */,
+			);
+			name = "Eye ExamTests";
+			packageProductDependencies = (
+			);
+			productName = "Eye ExamTests";
+			productReference = 739E6B172D00F4E7005D6D41 /* Eye ExamTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		739E6B202D00F4E7005D6D41 /* Eye ExamUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 739E6B312D00F4E7005D6D41 /* Build configuration list for PBXNativeTarget "Eye ExamUITests" */;
+			buildPhases = (
+				739E6B1D2D00F4E7005D6D41 /* Sources */,
+				739E6B1E2D00F4E7005D6D41 /* Frameworks */,
+				739E6B1F2D00F4E7005D6D41 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				739E6B232D00F4E7005D6D41 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				739E6B242D00F4E7005D6D41 /* Eye ExamUITests */,
+			);
+			name = "Eye ExamUITests";
+			packageProductDependencies = (
+			);
+			productName = "Eye ExamUITests";
+			productReference = 739E6B212D00F4E7005D6D41 /* Eye ExamUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		739E6AFF2D00F4E6005D6D41 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					739E6B062D00F4E6005D6D41 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					739E6B162D00F4E7005D6D41 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 739E6B062D00F4E6005D6D41;
+					};
+					739E6B202D00F4E7005D6D41 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 739E6B062D00F4E6005D6D41;
+					};
+				};
+			};
+			buildConfigurationList = 739E6B022D00F4E6005D6D41 /* Build configuration list for PBXProject "Eye Exam" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 739E6AFE2D00F4E6005D6D41;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 739E6B082D00F4E6005D6D41 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				739E6B062D00F4E6005D6D41 /* Eye Exam */,
+				739E6B162D00F4E7005D6D41 /* Eye ExamTests */,
+				739E6B202D00F4E7005D6D41 /* Eye ExamUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		739E6B052D00F4E6005D6D41 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		739E6B152D00F4E7005D6D41 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		739E6B1F2D00F4E7005D6D41 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		739E6B032D00F4E6005D6D41 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		739E6B132D00F4E7005D6D41 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		739E6B1D2D00F4E7005D6D41 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		739E6B192D00F4E7005D6D41 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 739E6B062D00F4E6005D6D41 /* Eye Exam */;
+			targetProxy = 739E6B182D00F4E7005D6D41 /* PBXContainerItemProxy */;
+		};
+		739E6B232D00F4E7005D6D41 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 739E6B062D00F4E6005D6D41 /* Eye Exam */;
+			targetProxy = 739E6B222D00F4E7005D6D41 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		739E6B292D00F4E7005D6D41 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		739E6B2A2D00F4E7005D6D41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		739E6B2C2D00F4E7005D6D41 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Eye Exam/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Peanut-Chowder.Eye-Exam";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		739E6B2D2D00F4E7005D6D41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Eye Exam/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Peanut-Chowder.Eye-Exam";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		739E6B2F2D00F4E7005D6D41 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Peanut-Chowder.Eye-ExamTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Eye Exam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Eye Exam";
+			};
+			name = Debug;
+		};
+		739E6B302D00F4E7005D6D41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Peanut-Chowder.Eye-ExamTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Eye Exam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Eye Exam";
+			};
+			name = Release;
+		};
+		739E6B322D00F4E7005D6D41 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Peanut-Chowder.Eye-ExamUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Eye Exam";
+			};
+			name = Debug;
+		};
+		739E6B332D00F4E7005D6D41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Peanut-Chowder.Eye-ExamUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Eye Exam";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		739E6B022D00F4E6005D6D41 /* Build configuration list for PBXProject "Eye Exam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				739E6B292D00F4E7005D6D41 /* Debug */,
+				739E6B2A2D00F4E7005D6D41 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		739E6B2B2D00F4E7005D6D41 /* Build configuration list for PBXNativeTarget "Eye Exam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				739E6B2C2D00F4E7005D6D41 /* Debug */,
+				739E6B2D2D00F4E7005D6D41 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		739E6B2E2D00F4E7005D6D41 /* Build configuration list for PBXNativeTarget "Eye ExamTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				739E6B2F2D00F4E7005D6D41 /* Debug */,
+				739E6B302D00F4E7005D6D41 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		739E6B312D00F4E7005D6D41 /* Build configuration list for PBXNativeTarget "Eye ExamUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				739E6B322D00F4E7005D6D41 /* Debug */,
+				739E6B332D00F4E7005D6D41 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 739E6AFF2D00F4E6005D6D41 /* Project object */;
+}
