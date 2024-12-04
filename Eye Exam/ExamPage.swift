@@ -1,9 +1,20 @@
 import SwiftUI
 
 struct ExamPage: View {
-    @StateObject private var viewModel = DistanceChecker()
+    private let targetDistance: Float
+    private let tolerance: Float
+    
+    @StateObject private var distanceChecker: DistanceChecker
     @State private var isReady = false
     
+    init() {
+        targetDistance = 1.0 // units in meters
+        tolerance = 0.1
+        
+        let distanceCheckerObj = DistanceChecker(targetDistance: targetDistance, tolerance: tolerance)
+        _distanceChecker = StateObject(wrappedValue: distanceCheckerObj)
+    }
+
     var body: some View {
         ZStack {
             Color.black
@@ -11,28 +22,28 @@ struct ExamPage: View {
             
             VStack(spacing: 20) {
                 // Distance indicator
-                Text(String(format: "%.2f meters", viewModel.currentDistance))
+                Text(String(format: "%.2f meters", distanceChecker.currentDistance))
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.white)
                 
                 // Status message
-                Text(viewModel.isAtCorrectDistance ? "Perfect! Hold this position" : "Move closer or further")
+                Text(distanceChecker.isAtCorrectDistance ? "Perfect! Hold this position" : "Move closer or further")
                     .font(.system(size: 20))
-                    .foregroundColor(viewModel.isAtCorrectDistance ? .green : .white)
+                    .foregroundColor(distanceChecker.isAtCorrectDistance ? .green : .white)
                 
                 // Distance guide
-                DistanceGuideView(currentDistance: viewModel.currentDistance,
-                                targetDistance: 1.0,
-                                tolerance: 0.1)
+                DistanceGuideView(currentDistance: distanceChecker.currentDistance,
+                                  targetDistance: targetDistance,
+                                  tolerance: tolerance)
                     .frame(height: 100)
                     .padding(.horizontal)
             }
         }
         .onAppear {
-            viewModel.startDistanceCheck()
+            distanceChecker.startDistanceCheck()
         }
         .onDisappear {
-            viewModel.stopDistanceCheck()
+            distanceChecker.stopDistanceCheck()
         }
     }
 }

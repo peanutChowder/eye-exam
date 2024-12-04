@@ -46,7 +46,7 @@ struct ContentView: View {
                 .padding(.horizontal, 40)
                 .padding(.bottom, 50)
                 .fullScreenCover(isPresented: $startExam) {
-                    DistanceCheckView()
+                    ExamPage()
                 }
             }
         }

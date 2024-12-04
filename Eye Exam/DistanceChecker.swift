@@ -5,11 +5,13 @@ class DistanceChecker: NSObject, ObservableObject {
     @Published var currentDistance: Float = 0
     @Published var isAtCorrectDistance: Bool = false
     
-    private let targetDistance: Float = 0.3 // units in meters
-    private let tolerance: Float = 0.1 // 10cm tolerance
+    private let targetDistance: Float // units in meters
+    private let tolerance: Float
     private var arSession: ARSession?
     
-    override init() {
+    init(targetDistance: Float, tolerance: Float) {
+        self.targetDistance = targetDistance
+        self.tolerance = tolerance
         super.init()
         setupARSession()
     }
