@@ -11,7 +11,7 @@ struct ContentView: View {
                 // Top logo/icon
                 Image(systemName: "eye.fill")
                     .font(.system(size: 60))
-                    .foregroundColor(Color(UIColor.systemBlue))
+                    .foregroundColor(Color.customTheme.accentBlue)
                 
                 // Title
                 Text("Eye Exam")
@@ -38,7 +38,7 @@ struct ContentView: View {
                         .padding(.vertical, 16)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(Color(UIColor.systemBlue))
+                                .fill(Color.customTheme.accentBlue)
                                 .shadow(color: Color.black.opacity(0.1), radius: 4, y: 2)
                         )
                 }
