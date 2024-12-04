@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct DistanceCheckView: View {
+struct ExamPage: View {
     @StateObject private var viewModel = DistanceChecker()
     @State private var isReady = false
     
@@ -64,5 +64,11 @@ struct DistanceGuideView: View {
                     .offset(x: CGFloat((currentDistance / 2) * Float(geometry.size.width)) - 2)
             }
         }
+    }
+}
+
+struct ExamPage_Previews: PreviewProvider {
+    static var previews: some View {
+        ExamPage()
     }
 }
