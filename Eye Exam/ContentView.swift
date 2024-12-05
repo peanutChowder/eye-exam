@@ -19,8 +19,7 @@ struct ContentView: View {
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(Color(UIColor.label))
                 
-                // Subtitle
-                Text("Quick and accurate vision screening")
+                Text("Quick Vision Screening")
                     .font(.system(size: 16))
                     .foregroundColor(Color(UIColor.secondaryLabel))
                     .multilineTextAlignment(.center)
@@ -46,7 +45,7 @@ struct ContentView: View {
                 .padding(.horizontal, 40)
                 .padding(.bottom, 50)
                 .fullScreenCover(isPresented: $startExam) {
-                    ExamPage()
+                    DistanceView()
                 }
             }
         }
