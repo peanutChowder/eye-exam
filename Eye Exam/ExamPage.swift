@@ -4,40 +4,72 @@ struct ExamPage: View {
     private let targetDistance: Float
     private let tolerance: Float
     
+    @Environment(\.presentationMode) private var presentationMode
     @StateObject private var distanceChecker: DistanceChecker
     @State private var isReady = false
     
     init() {
-        targetDistance = 1.0 // units in meters
+        targetDistance = 0.3 // units in meters
         tolerance = 0.1
         
         let distanceCheckerObj = DistanceChecker(targetDistance: targetDistance, tolerance: tolerance)
         _distanceChecker = StateObject(wrappedValue: distanceCheckerObj)
     }
-
+    
     var body: some View {
         ZStack {
             Color.black
                 .ignoresSafeArea()
             
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 17, weight: .medium))
+                            .foregroundColor(.white.opacity(0.7))
+                            .padding(12)
+                    }
+                }
+                .padding(.top, 8)
+                
+                Spacer()
+            }
+            
             VStack(spacing: 20) {
-                // Distance indicator
-                Text(String(format: "%.2f meters", distanceChecker.currentDistance))
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
+                // Meters display
+                if (!distanceChecker.isAtCorrectDistance) {
+                    Text(String(format: "%.2f meters", distanceChecker.currentDistance))
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.white)
+                }
                 
-                // Status message
-                Text(distanceChecker.isAtCorrectDistance ? "Perfect! Hold this position" : "Move closer or further")
-                    .font(.system(size: 20))
-                    .foregroundColor(distanceChecker.isAtCorrectDistance ? .green : .white)
+                if let countdown = distanceChecker.countdownValue {
+                    Text("Perfect! Hold this position")
+                        .font(.system(size: 20))
+                        .foregroundColor(.green)
+                    Text("\(countdown)")
+                        .font(.system(size: 60, weight: .bold))
+                        .foregroundColor(.white)
+                } else {
+                    Text(distanceChecker.isAtCorrectDistance ? "Perfect! Hold this position" : "Move closer or further")
+                        .font(.system(size: 20))
+                        .foregroundColor(distanceChecker.isAtCorrectDistance ? .green : .white)
+                }
                 
-                // Distance guide
+                // Visual distance indicator
                 DistanceGuideView(currentDistance: distanceChecker.currentDistance,
                                   targetDistance: targetDistance,
                                   tolerance: tolerance)
-                    .frame(height: 100)
-                    .padding(.horizontal)
+                .frame(height: 100)
+                .padding(.horizontal)
             }
+            .animation(.easeInOut, value: distanceChecker.countdownValue)
+            .animation(.easeInOut, value: distanceChecker.isAtCorrectDistance)
+
+            
         }
         .onAppear {
             distanceChecker.startDistanceCheck()
