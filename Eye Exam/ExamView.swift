@@ -2,12 +2,14 @@ import SwiftUI
 
 struct EyeExamView: View {
     @ObservedObject var distanceChecker: DistanceChecker
+    @StateObject private var snellenManager = SnellenManager()
+    
+    // State to store current letter and size
+    @State private var currentLetter: String = "E"
+    @State private var currentFontSize: CGFloat = 100
     
     let targetDistance: Float
     let tolerance: Float
-    
-    private let letter = "E"
-    private let fontSize: CGFloat = 100
     
     var body: some View {
         ZStack {
@@ -24,9 +26,18 @@ struct EyeExamView: View {
             if distanceChecker.isAtCorrectDistance {
                 // Exam content
                 VStack {
-                    Text(letter)
-                        .font(.custom("Helvetica", size: fontSize))
+                    Text(currentLetter)
+                        .font(.custom("Helvetica", size: currentFontSize))
                         .foregroundColor(.black)
+                    
+                    // Optional: Show current visual acuity level
+                    Text(snellenManager.currentVisualAcuity)
+                        .font(.system(size: 18))
+                        .foregroundColor(.gray)
+                        .padding(.top, 20)
+                }
+                .onTapGesture {
+                    advanceToNextLetter()
                 }
             } else {
                 // Distance warning
@@ -42,6 +53,18 @@ struct EyeExamView: View {
         .animation(.easeInOut, value: distanceChecker.isAtCorrectDistance)
     }
     
+    private func advanceToNextLetter() {
+        if let nextLetter = snellenManager.getNextLetter() {
+            currentLetter = nextLetter.letter
+            currentFontSize = nextLetter.fontSize
+        } else {
+            // TODO: add completion view
+            snellenManager.reset()
+            currentLetter = "E"
+            currentFontSize = 100
+        }
+    }
+    
     private func getDistanceWarning() -> String {
         let currentDistance = distanceChecker.currentDistance
         
@@ -51,12 +74,4 @@ struct EyeExamView: View {
             return "Too close\nPlease move back"
         }
     }
-}
-
-
-// future TODO
-struct SnellenLetter {
-    let character: String
-    let size: CGFloat
-    let rowLevel: Int
 }
