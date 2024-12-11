@@ -84,11 +84,26 @@ struct DistanceView: View {
     }
 }
 
-// Guide view to show users how close they are
 struct DistanceGuideView: View {
     let currentDistance: Float
     let targetDistance: Float
     let tolerance: Float
+    
+    private func normalizedPosition(distance: Float, geometry: GeometryProxy) -> CGFloat {
+        let backgroundWidth = targetDistance * 2
+        
+        // Convert the distance to a position between 0 and 1
+        let normalizedValue = distance / backgroundWidth
+        
+        // Convert to view coordinates
+        return CGFloat(normalizedValue) * geometry.size.width
+    }
+    
+    private func toleranceZoneWidth(geometry: GeometryProxy) -> CGFloat {
+        let backgroundWidth = targetDistance * 2
+        let toleranceWidth = (2 * tolerance / backgroundWidth) * Float(geometry.size.width)
+        return CGFloat(toleranceWidth)
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -98,17 +113,17 @@ struct DistanceGuideView: View {
                     .fill(Color.gray.opacity(0.3))
                     .cornerRadius(8)
                 
-                // Target zone band
+                // Target zone band - width based on tolerance
                 Rectangle()
                     .fill(Color.green.opacity(0.3))
-                    .frame(width: 40)
-                    .offset(x: CGFloat((targetDistance / 2) * Float(geometry.size.width)) - 20)
+                    .frame(width: toleranceZoneWidth(geometry: geometry))
+                    .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                 
                 // Current position indicator
                 Rectangle()
                     .fill(Color.white)
                     .frame(width: 4)
-                    .offset(x: CGFloat((currentDistance / 2) * Float(geometry.size.width)) - 2)
+                    .offset(x: normalizedPosition(distance: currentDistance, geometry: geometry) - 2)
             }
         }
     }
