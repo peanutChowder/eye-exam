@@ -30,7 +30,6 @@ struct EyeExamView: View {
                         .font(.custom("Helvetica", size: currentFontSize))
                         .foregroundColor(.black)
                     
-                    // Optional: Show current visual acuity level
                     Text(snellenManager.currentVisualAcuity)
                         .font(.system(size: 18))
                         .foregroundColor(.gray)
@@ -54,14 +53,17 @@ struct EyeExamView: View {
     }
     
     private func advanceToNextLetter() {
-        if let nextLetter = snellenManager.getNextLetter() {
+        if let nextLetter = snellenManager.getNextLetter(targetDistance: targetDistance) {
             currentLetter = nextLetter.letter
             currentFontSize = nextLetter.fontSize
         } else {
             // TODO: add completion view
             snellenManager.reset()
             currentLetter = "E"
-            currentFontSize = 100
+            currentFontSize = SnellenSizeCalculator.calculateFontSize(
+                for: "20/200",
+                at: targetDistance
+            )
         }
     }
     

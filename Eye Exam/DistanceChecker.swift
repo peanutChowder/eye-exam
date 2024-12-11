@@ -44,57 +44,56 @@ class DistanceChecker: NSObject, ObservableObject {
     }
     
     private func startCorrectDistanceTracking() {
-           correctDistanceTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-               self?.startCountdown()
-           }
-       }
-       
-       private func startCountdown() {
-           countdownValue = 3
-           countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
-               guard let self = self else { return }
-               
-               if let current = self.countdownValue {
-                   if current > 1 {
-                       self.countdownValue = current - 1
-                   } else {
-                       timer.invalidate()
-                       self.countdownValue = nil
-                       self.shouldStartExam = true
-                   }
-               }
-           }
-       }
-       
-       private func cancelTimers() {
-           correctDistanceTimer?.invalidate()
-           correctDistanceTimer = nil
-           countdownTimer?.invalidate()
-           countdownTimer = nil
-           countdownValue = nil
-       }
+        correctDistanceTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+            self?.startCountdown()
+        }
+    }
+    
+    private func startCountdown() {
+        countdownValue = 3
+        countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
+            guard let self = self else { return }
+            
+            if let current = self.countdownValue {
+                if current > 1 {
+                    self.countdownValue = current - 1
+                } else {
+                    timer.invalidate()
+                    self.countdownValue = nil
+                    self.shouldStartExam = true
+                }
+            }
+        }
+    }
+    
+    private func cancelTimers() {
+        correctDistanceTimer?.invalidate()
+        correctDistanceTimer = nil
+        countdownTimer?.invalidate()
+        countdownTimer = nil
+        countdownValue = nil
+    }
 }
 
 extension DistanceChecker: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-               guard let faceAnchor = anchors.first as? ARFaceAnchor else { return }
-               
-               let transform = faceAnchor.transform
-               let distance = abs(transform.columns.3.z)
-               
-               DispatchQueue.main.async {
-                   self.currentDistance = distance
-                   let isNowAtCorrectDistance = abs(distance - self.targetDistance) <= self.tolerance
-                   
-                   if isNowAtCorrectDistance != self.isAtCorrectDistance {
-                       self.isAtCorrectDistance = isNowAtCorrectDistance
-                       if isNowAtCorrectDistance {
-                           self.startCorrectDistanceTracking()
-                       } else {
-                           self.cancelTimers()
-                       }
-                   }
-               }
-           }
-    
+        guard let faceAnchor = anchors.first as? ARFaceAnchor else { return }
+        
+        let transform = faceAnchor.transform
+        let distance = abs(transform.columns.3.z)
+        
+        DispatchQueue.main.async {
+            self.currentDistance = distance
+            let isNowAtCorrectDistance = abs(distance - self.targetDistance) <= self.tolerance
+            
+            if isNowAtCorrectDistance != self.isAtCorrectDistance {
+                self.isAtCorrectDistance = isNowAtCorrectDistance
+                if isNowAtCorrectDistance {
+                    self.startCorrectDistanceTracking()
+                } else {
+                    self.cancelTimers()
+                }
+            }
+        }
+    }
 }

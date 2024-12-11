@@ -25,23 +25,27 @@ class SnellenManager: ObservableObject {
         SnellenRow(visualAcuity: "20/15", letterCount: 9, fontSize: 6.3)
     ]
     
-    func getNextLetter() -> (letter: String, fontSize: CGFloat)? {
-        guard currentRow < rows.count else { return nil }  // Test complete
-        
-        let row = rows[currentRow]
-        
-        // Get random letter (avoiding last used letter if possible)
-        let letter = availableLetters.randomElement() ?? "E"
-        
-        // Advance position
-        currentLetterInRow += 1
-        if currentLetterInRow >= row.letterCount {
-            currentRow += 1
-            currentLetterInRow = 0
-        }
-        
-        return (letter, row.fontSize)
-    }
+    func getNextLetter(targetDistance: Float) -> (letter: String, fontSize: CGFloat)? {
+           guard currentRow < rows.count else { return nil }
+           
+           let row = rows[currentRow]
+           let letter = availableLetters.randomElement() ?? "E"
+           
+           // Calculate proper font size for this row
+           let fontSize = SnellenSizeCalculator.calculateFontSize(
+               for: row.visualAcuity,
+               at: targetDistance
+           )
+           
+           // Advance position
+           currentLetterInRow += 1
+           if currentLetterInRow >= row.letterCount {
+               currentRow += 1
+               currentLetterInRow = 0
+           }
+           
+           return (letter, fontSize)
+       }
     
     func reset() {
         currentRow = 0
