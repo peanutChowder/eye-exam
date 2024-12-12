@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct EyeExamView: View {
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var distanceChecker: DistanceChecker
     @StateObject private var snellenManager = SnellenManager()
     
@@ -21,6 +22,25 @@ struct EyeExamView: View {
                 }
             }
             .ignoresSafeArea()
+            
+            // Close button overlay
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 17, weight: .medium))
+                            .foregroundColor(distanceChecker.isAtCorrectDistance ? .black.opacity(0.7) : .white.opacity(0.7))
+                            .padding(12)
+                    }
+                }
+                .padding(.top, 8)
+                .padding(.trailing, 8)
+                
+                Spacer()
+            }
             
             // Warn user if they are too close/far
             if distanceChecker.isAtCorrectDistance {
