@@ -101,7 +101,7 @@ struct EyeExamView: View {
                 advanceToNextLetter()
             }
         }
-        speechRecognizer.startRecording()
+        speechRecognizer.startRecording() // Start recording for first letter right away
     }
     
     private func getDistanceWarning() -> String {
