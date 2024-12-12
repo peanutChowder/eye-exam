@@ -9,6 +9,10 @@ struct EyeExamView: View {
     @State private var currentLetter: String = "E"
     @State private var currentFontSize: CGFloat = 100
     
+    // Voice recognition
+    @StateObject private var speechRecognizer = SnellenSpeechRecognizer()
+    @State private var isListening = false
+    
     let targetDistance: Float
     let tolerance: Float
     
@@ -69,6 +73,9 @@ struct EyeExamView: View {
                 }
             }
         }
+        .onAppear {
+            setupSpeechRecognition()
+        }
         .animation(.easeInOut, value: distanceChecker.isAtCorrectDistance)
     }
     
@@ -85,6 +92,16 @@ struct EyeExamView: View {
                 at: targetDistance
             )
         }
+    }
+    
+    private func setupSpeechRecognition() {
+        // callback function -- move to next letter whevever a snellen letter is recognized
+        speechRecognizer.onLetterRecognized = { recognizedLetter in
+            DispatchQueue.main.async {
+                advanceToNextLetter()
+            }
+        }
+        speechRecognizer.startRecording()
     }
     
     private func getDistanceWarning() -> String {

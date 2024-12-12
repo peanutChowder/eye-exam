@@ -10,7 +10,7 @@ struct DistanceView: View {
     
     init() {
         targetDistance = 0.3 // units in meters
-        tolerance = 0.1
+        tolerance = 0.05
         
         let distanceCheckerObj = DistanceChecker(targetDistance: targetDistance, tolerance: tolerance)
         _distanceChecker = StateObject(wrappedValue: distanceCheckerObj)

@@ -400,6 +400,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is needed to measure the distance for your eye exam.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Microphone is required to hear you during the eye exam.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speech recognition is required to understand what you read during the eye exam.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -430,6 +432,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is needed to measure the distance for your eye exam.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Microphone is required to hear you during the eye exam.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speech recognition is required to understand what you read during the eye exam.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
