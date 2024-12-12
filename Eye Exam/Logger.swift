@@ -16,6 +16,6 @@ class Logger {
     }
     
     static func rlog(_ message: String) {
-        print("| ", message)
+        print(message)
     }
 }
