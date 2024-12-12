@@ -15,7 +15,7 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
     
     // Track silence for auto-stopping
     private var lastSpeechTime: Date?
-    private let silenceThreshold: TimeInterval = 1.0 // 1 second of silence
+    private let silenceThreshold: TimeInterval = 30.0 //seconds
     private var silenceTimer: Timer?
     
     override init() {
@@ -34,6 +34,7 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
             }
             
             // Stop recording after silence threshold
+            Logger.rlog("Silence threshold reached")
             self.stopRecording()
         }
     }
@@ -44,14 +45,14 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
             
             DispatchQueue.main.async {
                 guard authStatus == .authorized else {
-                    print("Speech recognition not authorized")
+                    Logger.rlog("Speech recognition not authorized")
                     return
                 }
                 
                 do {
                     try self.startRecordingSession()
                 } catch {
-                    print("Failed to start recording: \(error)")
+                    Logger.rlog("Failed to start recording: \(error)")
                 }
             }
         }
@@ -62,7 +63,7 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
         recognitionTask?.cancel()
         recognitionTask = nil
         
-        Logger.group("Started speech recording")
+        Logger.rlog("Started speech recording")
         
         // Configure audio session
         let audioSession = AVAudioSession.sharedInstance()
@@ -91,7 +92,7 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
             if let result = result {
                 let text = result.bestTranscription.formattedString.uppercased()
                 
-                Logger.log("Letter: \(text)")
+                Logger.rlog("Letter: \(text)")
                 
                 // Check for valid letters in the transcription
                 for letter in text.components(separatedBy: " ") {
@@ -103,12 +104,12 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
             }
             
             if error != nil {
+                Logger.log("Error: \(String(describing: error))")
                 self.stopRecording()
             }
         }
         
         lastSpeechTime = Date()
-        Logger.groupEnd()
     }
     
     func stopRecording() {
@@ -118,5 +119,6 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
         recognitionRequest = nil
         recognitionTask?.cancel()
         recognitionTask = nil
+        Logger.rlog("Recording stopped")
     }
 }
