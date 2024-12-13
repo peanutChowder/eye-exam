@@ -7,7 +7,8 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
     
-    private let validLetters = Set(["E", "F", "P", "T", "O", "Z", "L", "D"])
+    private let snellenLetters = Set(["E", "F", "P", "T", "O", "Z", "L", "D"])
+    private let validLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map { String($0) }
     var onLetterRecognized: ((String) -> Void)?
     
     private var lastSpeechTime: Date?
@@ -81,6 +82,13 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
             Logger.log("ERROR: Unable to create recognition request")
             throw NSError(domain: "SnellenSpeechRecognizer", code: -1, userInfo: nil)
         }
+        
+        // Bias the recognizer towards all letters
+        recognitionRequest?.contextualStrings = validLetters
+
+        // Optional: Set task hint to dictation for better accuracy with single letters
+        recognitionRequest?.taskHint = .dictation
+        
         recognitionRequest?.shouldReportPartialResults = true
         
         guard let speechRecognizer = speechRecognizer else {
@@ -128,10 +136,10 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
             }
             
             if let result = result {
-                let text = result.bestTranscription.formattedString.uppercased()
-                Logger.log("Recognition result: \(text)")
+                let segments = result.bestTranscription.segments
                 
-                for letter in text.components(separatedBy: " ") {
+                for segment in segments {
+                    let letter = segment.substring.uppercased()
                     if letter.count == 1 && self.validLetters.contains(letter) {
                         Logger.log("Valid letter recognized: \(letter)")
                         self.lastSpeechTime = Date()
@@ -150,6 +158,8 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
                             }
                         }
                         return
+                    } else {
+                        Logger.log("Invalid segment: \(segment.substring)")
                     }
                 }
             }
