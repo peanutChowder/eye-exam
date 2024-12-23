@@ -10,7 +10,7 @@ struct EyeExamView: View {
     @State private var currentFontSize: CGFloat = 100
     
     // Voice recognition
-    @StateObject private var speechRecognizer = SnellenSpeechRecognizer()
+    @StateObject private var speechRecognizer = SnellenSpeechHandler()
     @State private var isListening = false
     
     let targetDistance: Float
