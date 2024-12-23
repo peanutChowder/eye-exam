@@ -1,11 +1,14 @@
 import Speech
 import AVFoundation
+import AVKit
 
-class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableObject {
+class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthesizerDelegate, ObservableObject {
     private let speechRecognizer: SFSpeechRecognizer?
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
+    private var speechCompletionContinuation: CheckedContinuation<Void, Never>?
+
     
     private let snellenLetters = Set(["E", "F", "P", "T", "O", "Z", "L", "D"])
     private let validLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map { String($0) }
@@ -17,6 +20,10 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
     
     // Add a flag to track if we're in the process of restarting
     private var isRestarting = false
+    
+    // Use for auditory cues to user
+    private let synthesizer = AVSpeechSynthesizer()
+
     
     override init() {
         self.speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
@@ -70,7 +77,7 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
         let audioSession = AVAudioSession.sharedInstance()
         do {
             Logger.log("Configuring audio session...")
-            try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.duckOthers, .mixWithOthers])
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
             Logger.log("Audio session configuration failed: \(error.localizedDescription)")
@@ -148,13 +155,21 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
                         // Set the restart flag before cleanup
                         self.isRestarting = true
                         
-                        // Clean up and restart with a slight delay
-                        self.cleanupRecordingSession()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            do {
-                                try self.startRecordingSession()
-                            } catch {
-                                Logger.log("Failed to restart recording session: \(error)")
+                        // Task for the speech
+                        Task {
+                            await self.askUserForConfirmation(letter: letter)
+                            
+                            // delay to make sure speech finishes talking
+                            try? await Task.sleep(nanoseconds: 500_000_000)
+                            
+                            self.cleanupRecordingSession()
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                do {
+                                    try self.startRecordingSession()
+                                } catch {
+                                    Logger.log("Failed to restart recording session: \(error)")
+                                }
                             }
                         }
                         return
@@ -191,5 +206,39 @@ class SnellenSpeechRecognizer: NSObject, SFSpeechRecognizerDelegate, ObservableO
     func stopRecording() {
         cleanupRecordingSession()
         Logger.rlog("Recording stopped")
+    }
+    
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        do {
+            // Resume recording
+            try audioEngine.start()
+        } catch {
+            Logger.rlog("Failed to resume audio engine: \(error)")
+        }
+        
+        speechCompletionContinuation?.resume()
+        speechCompletionContinuation = nil
+    }
+    
+    func askUserForConfirmation(letter: String) async {
+        // Stop recording temporarily
+        audioEngine.pause()
+        recognitionRequest?.endAudio()
+        recognitionTask?.cancel()
+        
+        let utterance = AVSpeechUtterance(string: "Did you say this letter, \(letter)?")
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        
+        return await withCheckedContinuation { continuation in
+            synthesizer.delegate = self
+            speechCompletionContinuation = continuation
+            
+            if synthesizer.isSpeaking {
+                synthesizer.stopSpeaking(at: .immediate)
+            }
+            
+            synthesizer.speak(utterance)
+            Logger.rlog("Spoke message for letter: \(letter)")
+        }
     }
 }
