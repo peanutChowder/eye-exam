@@ -16,6 +16,15 @@ struct EyeExamView: View {
     let targetDistance: Float
     let tolerance: Float
     
+    private var showDebugNum = true
+    @State private var letterNum = 0
+    
+    init(distanceChecker: DistanceChecker, targetDistance: Float, tolerance: Float) {
+        self.distanceChecker = distanceChecker
+        self.targetDistance = targetDistance
+        self.tolerance = tolerance
+    }
+    
     var body: some View {
         ZStack {
             Group {
@@ -58,6 +67,13 @@ struct EyeExamView: View {
                         .font(.system(size: 18))
                         .foregroundColor(.gray)
                         .padding(.top, 20)
+                    
+                    if (showDebugNum) {
+                        Text(String(letterNum))
+                            .font(.system(size: 18))
+                            .foregroundColor(.gray)
+                            .padding(.top, 20)
+                    }
                 }
                 .onTapGesture {
                     advanceToNextLetter()
@@ -83,9 +99,11 @@ struct EyeExamView: View {
         if let nextLetter = snellenManager.getNextLetter(targetDistance: targetDistance) {
             currentLetter = nextLetter.letter
             currentFontSize = nextLetter.fontSize
+            letterNum += 1
         } else {
             // TODO: add completion view
             snellenManager.reset()
+            letterNum = 0
             currentLetter = "E"
             currentFontSize = SnellenSizeCalculator.calculateFontSize(
                 for: "20/200",
