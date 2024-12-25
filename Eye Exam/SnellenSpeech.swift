@@ -15,11 +15,9 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     var onLetterRecognized: ((String) -> Void)?
     
     private var lastSpeechTime: Date?
-    private let silenceThreshold: TimeInterval = 30.0
-    private var silenceTimer: Timer?
     
-    // Add a flag to track if we're in the process of restarting
-    private var isRestarting = false
+
+    private var shouldProcessRecognition = true
     
     // Use for auditory cues to user
     private let synthesizer = AVSpeechSynthesizer()
@@ -38,9 +36,6 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     
     func startRecording() {
         Logger.rlog("Requesting speech recognition authorization...")
-        
-        // Reset the restart flag
-        isRestarting = false
         
         SFSpeechRecognizer.requestAuthorization { [weak self] authStatus in
             guard let self = self else {
@@ -92,8 +87,7 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
         
         // Bias the recognizer towards all letters
         recognitionRequest?.contextualStrings = validLetters
-
-        // Optional: Set task hint to dictation for better accuracy with single letters
+        
         recognitionRequest?.taskHint = .dictation
         
         recognitionRequest?.shouldReportPartialResults = true
@@ -132,13 +126,6 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
             
             if let error = error {
                 Logger.log("Recognition task error: \(error.localizedDescription)")
-                Logger.log("Error domain: \(error._domain)")
-                Logger.log("Error code: \(error._code)")
-                
-                // Only handle cleanup if we're not already restarting
-                if !self.isRestarting {
-                    self.cleanupRecordingSession()
-                }
                 return
             }
             
@@ -149,39 +136,27 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
                     let letter = segment.substring.uppercased()
                     if letter.count == 1 && self.validLetters.contains(letter) {
                         Logger.log("Valid letter recognized: \(letter)")
-                        self.lastSpeechTime = Date()
                         self.onLetterRecognized?(letter)
                         
-                        // Set the restart flag before cleanup
-                        self.isRestarting = true
-                        
-                        // Task for the speech
                         Task {
                             await self.askUserForConfirmation(letter: letter)
-                            
-                            // delay to make sure speech finishes talking
-                            try? await Task.sleep(nanoseconds: 500_000_000)
-                            
-                            self.cleanupRecordingSession()
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                do {
-                                    try self.startRecordingSession()
-                                } catch {
-                                    Logger.log("Failed to restart recording session: \(error)")
-                                }
-                            }
                         }
                         return
-                    } else {
-                        Logger.log("Invalid segment: \(segment.substring)")
                     }
                 }
             }
         }
         
+        
         lastSpeechTime = Date()
         Logger.groupEnd("Recording session started successfully")
+    }
+    
+    private func pauseRecognition() {
+        Logger.log("Pausing speech recognition")
+        audioEngine.stop()
+        audioEngine.inputNode.removeTap(onBus: 0)
+        recognitionRequest?.endAudio()
     }
     
     private func cleanupRecordingSession() {
@@ -191,16 +166,6 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
         recognitionRequest = nil
         recognitionTask?.cancel()
         recognitionTask = nil
-        
-        // Deactivate audio session
-        do {
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        } catch {
-            Logger.rlog("Recording cleanup error: \(error)")
-        }
-        
-        Logger.rlog("Cleanup done")
-        Logger.groupEnd()
     }
     
     func stopRecording() {
@@ -209,24 +174,24 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     }
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        do {
-            // Resume recording
-            try audioEngine.start()
-        } catch {
-            Logger.rlog("Failed to resume audio engine: \(error)")
+        Task {
+            do {
+                try await Task.sleep(nanoseconds: 500_000_000) // Half second delay
+                try startRecordingSession()
+            } catch {
+                Logger.log("Failed to restart recording session: \(error)")
+            }
         }
         
         speechCompletionContinuation?.resume()
         speechCompletionContinuation = nil
     }
     
+    
     func askUserForConfirmation(letter: String) async {
-        // Stop recording temporarily
-        audioEngine.pause()
-        recognitionRequest?.endAudio()
-        recognitionTask?.cancel()
+        pauseRecognition()
         
-        let utterance = AVSpeechUtterance(string: "Did you say this letter, \(letter)?")
+        let utterance = AVSpeechUtterance(string: "Is this the correct letter, \(letter)?")
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
         
         return await withCheckedContinuation { continuation in
@@ -238,7 +203,7 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
             }
             
             synthesizer.speak(utterance)
-            Logger.rlog("Spoke message for letter: \(letter)")
+            Logger.rlog("Speaking message for letter: \(letter)")
         }
     }
 }
