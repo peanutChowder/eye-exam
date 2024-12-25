@@ -9,6 +9,9 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     private let audioEngine = AVAudioEngine()
     private var speechCompletionContinuation: CheckedContinuation<Void, Never>?
 
+    private var lastRecognizedLetter: String?
+    private var lastRecognitionTime: Date?
+    private let recognitionCooldown: TimeInterval = 1.0
     
     private let snellenLetters = Set(["E", "F", "P", "T", "O", "Z", "L", "D"])
     private let validLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map { String($0) }
@@ -121,36 +124,51 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
         }
         
         Logger.log("Starting recognition task...")
-        recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest!) { [weak self] result, error in
-            guard let self = self else { return }
-            
-            if let error = error {
-                Logger.log("Recognition task error: \(error.localizedDescription)")
-                return
-            }
-            
-            if let result = result {
-                let segments = result.bestTranscription.segments
-                
-                for segment in segments {
-                    let letter = segment.substring.uppercased()
-                    if letter.count == 1 && self.validLetters.contains(letter) {
-                        Logger.log("Valid letter recognized: \(letter)")
-                        self.onLetterRecognized?(letter)
-                        
-                        Task {
-                            await self.askUserForConfirmation(letter: letter)
-                        }
+                recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest!) { [weak self] result, error in
+                    guard let self = self else { return }
+                    
+                    if let error = error {
+                        Logger.log("Recognition task error: \(error.localizedDescription)")
                         return
                     }
+                    
+                    if let result = result {
+                        let segments = result.bestTranscription.segments
+                        
+                        for segment in segments {
+                            Logger.log("Segment: \(segment)")
+                            
+                            let letter = segment.substring.uppercased()
+                            if letter.count == 1 && self.validLetters.contains(letter) {
+                                
+                                // Prevent duplicate recognitions due to recognizing a segment and then the final letter
+                                let now = Date()
+                                if let lastTime = self.lastRecognitionTime,
+                                   let lastLetter = self.lastRecognizedLetter,
+                                   lastLetter == letter &&
+                                   now.timeIntervalSince(lastTime) < self.recognitionCooldown {
+                                    return
+                                }
+                                
+                                // Update tracking properties
+                                self.lastRecognizedLetter = letter
+                                self.lastRecognitionTime = now
+                                
+                                Logger.log("Valid letter recognized: \(letter)")
+                                self.onLetterRecognized?(letter)
+                                
+                                Task {
+                                    await self.askUserForConfirmation(letter: letter)
+                                }
+                                return
+                            }
+                        }
+                    }
                 }
+                
+                lastRecognitionTime = Date()
+                Logger.groupEnd("Recording session started successfully")
             }
-        }
-        
-        
-        lastSpeechTime = Date()
-        Logger.groupEnd("Recording session started successfully")
-    }
     
     private func pauseRecognition() {
         Logger.log("Pausing speech recognition")
