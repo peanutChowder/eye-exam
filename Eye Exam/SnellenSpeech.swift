@@ -18,13 +18,18 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     var onLetterRecognized: ((String) -> Void)?
     
     private var lastSpeechTime: Date?
-    
-
     private var shouldProcessRecognition = true
     
     // Use for auditory cues to user
     private let synthesizer = AVSpeechSynthesizer()
-
+    
+    // Current recording mode vars
+    private enum RecognitionMode {
+        case letter
+        case confirmation(letterToConfirm: String)}
+    private var currentMode: RecognitionMode = .letter
+    private let confirmationPhrases = ["yes", "yeah", "correct", "right", "no", "nope", "incorrect", "wrong"]
+    
     
     override init() {
         self.speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
@@ -88,9 +93,13 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
             throw NSError(domain: "SnellenSpeechRecognizer", code: -1, userInfo: nil)
         }
         
-        // Bias the recognizer towards all letters
-        recognitionRequest?.contextualStrings = validLetters
-        
+        // Bias the recognizer towards letters or yes/no confirms
+        switch currentMode {
+        case .letter:
+            recognitionRequest?.contextualStrings = validLetters
+        case .confirmation:
+            recognitionRequest?.contextualStrings = confirmationPhrases
+        }
         recognitionRequest?.taskHint = .dictation
         
         recognitionRequest?.shouldReportPartialResults = true
@@ -124,51 +133,80 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
         }
         
         Logger.log("Starting recognition task...")
-                recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest!) { [weak self] result, error in
-                    guard let self = self else { return }
-                    
-                    if let error = error {
-                        Logger.log("Recognition task error: \(error.localizedDescription)")
+        recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest!) { [weak self] result, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                Logger.log("Recognition task error: \(error.localizedDescription)")
+                return
+            }
+            
+            if let result = result {
+                self.handleRecognitionResult(result)
+            }
+        }
+        
+        lastRecognitionTime = Date()
+        Logger.groupEnd("Recording session started successfully")
+    }
+    
+    private func handleRecognitionResult(_ result: SFSpeechRecognitionResult) {
+            let segments = result.bestTranscription.segments
+            
+            switch currentMode {
+            case .letter:
+                handleLetterRecognition(segments)
+            case .confirmation(let letterToConfirm):
+                handleConfirmationRecognition(segments, forLetter: letterToConfirm)
+            }
+        }
+        
+        private func handleLetterRecognition(_ segments: [SFTranscriptionSegment]) {
+            for segment in segments {
+                Logger.log("Letter segment: \(segment.substring)")
+                let letter = segment.substring.uppercased()
+                if letter.count == 1 && validLetters.contains(letter) {
+                    // Check cooldown
+                    let now = Date()
+                    if let lastTime = lastRecognitionTime,
+                       let lastLetter = lastRecognizedLetter,
+                       lastLetter == letter &&
+                       now.timeIntervalSince(lastTime) < recognitionCooldown {
                         return
                     }
                     
-                    if let result = result {
-                        let segments = result.bestTranscription.segments
-                        
-                        for segment in segments {
-                            Logger.log("Segment: \(segment)")
-                            
-                            let letter = segment.substring.uppercased()
-                            if letter.count == 1 && self.validLetters.contains(letter) {
-                                
-                                // Prevent duplicate recognitions due to recognizing a segment and then the final letter
-                                let now = Date()
-                                if let lastTime = self.lastRecognitionTime,
-                                   let lastLetter = self.lastRecognizedLetter,
-                                   lastLetter == letter &&
-                                   now.timeIntervalSince(lastTime) < self.recognitionCooldown {
-                                    return
-                                }
-                                
-                                // Update tracking properties
-                                self.lastRecognizedLetter = letter
-                                self.lastRecognitionTime = now
-                                
-                                Logger.log("Valid letter recognized: \(letter)")
-                                self.onLetterRecognized?(letter)
-                                
-                                Task {
-                                    await self.askUserForConfirmation(letter: letter)
-                                }
-                                return
-                            }
-                        }
+                    lastRecognizedLetter = letter
+                    lastRecognitionTime = now
+                    
+                    Logger.log("Valid letter recognized: \(letter)")
+                    onLetterRecognized?(letter)
+                    
+                    Task {
+                        await askUserForConfirmation(letter: letter)
                     }
+                    return
+                }
+            }
+        }
+        
+        private func handleConfirmationRecognition(_ segments: [SFTranscriptionSegment], forLetter letter: String) {
+            for segment in segments {
+                Logger.log("Confirmation segment: \(segment.substring)")
+                let response = segment.substring.lowercased()
+                
+                if ["yes", "yeah", "correct", "right"].contains(response) {
+                    Logger.log("User confirmed letter \(letter)")
+                    currentMode = .letter
+                    return
                 }
                 
-                lastRecognitionTime = Date()
-                Logger.groupEnd("Recording session started successfully")
+                if ["no", "nope", "incorrect", "wrong"].contains(response) {
+                    Logger.log("User rejected letter \(letter)")
+                    currentMode = .letter
+                    return
+                }
             }
+        }
     
     private func pauseRecognition() {
         Logger.log("Pausing speech recognition")
@@ -220,8 +258,10 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
                 synthesizer.stopSpeaking(at: .immediate)
             }
             
+            currentMode = .confirmation(letterToConfirm: letter)
+            
             synthesizer.speak(utterance)
-            Logger.rlog("Speaking message for letter: \(letter)")
+            Logger.rlog("Speaking confirmation message for letter: \(letter)")
         }
     }
 }
