@@ -179,7 +179,6 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
                     lastRecognitionTime = now
                     
                     Logger.log("Valid letter recognized: \(letter)")
-                    onLetterRecognized?(letter)
                     
                     Task {
                         await askUserForConfirmation(letter: letter)
@@ -197,6 +196,7 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
                 if ["yes", "yeah", "correct", "right"].contains(response) {
                     Logger.log("User confirmed letter \(letter)")
                     currentMode = .letter
+                    onLetterRecognized?(letter)
                     return
                 }
                 
