@@ -88,11 +88,25 @@ struct EyeExamView: View {
                         .padding()
                 }
             }
+            if let message = speechRecognizer.overlayMessage {
+                ZStack {
+                    Color.customTheme.accentBlue
+                        .ignoresSafeArea()
+
+                    Text(message)
+                        .font(.system(size: 44, weight: .bold))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
+                .transition(.opacity.animation(.easeInOut(duration: 0.15)))
+            }
         }
         .onAppear {
             setupSpeechRecognition()
         }
         .animation(.easeInOut, value: distanceChecker.isAtCorrectDistance)
+        .animation(.easeInOut, value: speechRecognizer.overlayMessage != nil)
     }
     
     private func advanceToNextLetter() {

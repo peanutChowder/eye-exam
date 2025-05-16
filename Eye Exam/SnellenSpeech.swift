@@ -20,6 +20,8 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     private let validLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map { String($0) }
     var onLetterRecognized: ((String) -> Void)?
     
+    @Published var overlayMessage: String?
+    
     // Use for auditory cues
     private let synthesizer = AVSpeechSynthesizer()
     
@@ -242,40 +244,39 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
         Logger.rlog("Recording stopped")
     }
     
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        // Optionally wait a moment before re-enabling
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer,
+                           didFinish utterance: AVSpeechUtterance) {
+
+        // resume mic after a short delay
         Task {
-            do {
-                // Give the user a short delay to avoid speaking over TTS
-                try await Task.sleep(nanoseconds: 700_000_000) // 0.7s delay
-                try resumeAudioEngine()
-            } catch {
-                Logger.log("Failed to resume audio engine: \(error)")
-            }
+            try? await Task.sleep(nanoseconds: 700_000_000)
+            try? resumeAudioEngine()
         }
-        
-        // If you’re using withCheckedContinuation, resume it here
+
+        DispatchQueue.main.async { [weak self] in
+            self?.overlayMessage = nil
+        }
+
         speechCompletionContinuation?.resume()
         speechCompletionContinuation = nil
     }
     
     func askUserForConfirmation(letter: String) async {
         pauseAudioEngine()
-        
-        // Switch to confirmation mode
+
         currentMode = .confirmation(letterToConfirm: letter)
-        
-        let utterance = AVSpeechUtterance(string: "Is this the correct letter, \(letter)?")
+        let prompt = "Did you say\n\(letter)?"
+        let utterance = AVSpeechUtterance(string: prompt)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-        
+
+        DispatchQueue.main.async { [weak self] in
+            self?.overlayMessage = prompt
+        }
+
         return await withCheckedContinuation { continuation in
             speechCompletionContinuation = continuation
-            
-            // If TTS is already speaking, stop it first
-            if synthesizer.isSpeaking {
-                synthesizer.stopSpeaking(at: .immediate)
-            }
-            
+
+            if synthesizer.isSpeaking { synthesizer.stopSpeaking(at: .immediate) }
             synthesizer.speak(utterance)
             Logger.rlog("Speaking confirmation message for letter: \(letter)")
         }
