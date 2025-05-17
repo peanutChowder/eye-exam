@@ -196,16 +196,22 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
             Logger.log("Confirmation segment: \(segment.substring)")
             let response = segment.substring.lowercased()
             
-            if ["yes", "yeah", "correct", "right"].contains(response) {
+            if confirmationPhrases.contains(response) {
                 Logger.log("User confirmed letter \(letter)")
                 currentMode = .letter
                 onLetterRecognized?(letter)
+                DispatchQueue.main.async { [weak self] in
+                    self?.overlayMessage = nil
+                }
                 return
             }
             
             if ["no", "nope", "incorrect", "wrong"].contains(response) {
                 Logger.log("User rejected letter \(letter)")
                 currentMode = .letter
+                DispatchQueue.main.async { [weak self] in
+                    self?.overlayMessage = nil
+                }
                 return
             }
         }
@@ -251,10 +257,6 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
         Task {
             try? await Task.sleep(nanoseconds: 700_000_000)
             try? resumeAudioEngine()
-        }
-
-        DispatchQueue.main.async { [weak self] in
-            self?.overlayMessage = nil
         }
 
         speechCompletionContinuation?.resume()
