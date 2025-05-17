@@ -18,6 +18,11 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     
     private let snellenLetters = Set(["E", "F", "P", "T", "O", "Z", "L", "D"])
     private let validLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".map { String($0) }
+    private let commonConfusions: [String: String] = [
+        "oh": "O",
+        "see": "C",
+        "pee": "P"
+        ]
     var onLetterRecognized: ((String) -> Void)?
     
     @Published var overlayMessage: String?
@@ -168,7 +173,16 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     private func handleLetterRecognition(_ segments: [SFTranscriptionSegment]) {
         for segment in segments {
             Logger.log("Letter segment: \(segment.substring)")
-            let letter = segment.substring.uppercased()
+            
+            var letter: String!
+            if commonConfusions.keys.contains(segment.substring) {
+                letter = commonConfusions[segment.substring]
+            } else {
+                letter = segment.substring.uppercased()
+            }
+            
+            
+            
             if letter.count == 1 && validLetters.contains(letter) {
                 // Check cooldown if same letter repeated too fast
                 let now = Date()
@@ -181,7 +195,7 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
                 
                 lastRecognizedLetter = letter
                 lastRecognitionTime = now
-                Logger.log("Valid letter recognized: \(letter)")
+                Logger.log("Valid letter recognized: \(String(describing: letter))")
                 
                 // Pause, prompt user for confirmation
                 Task {
