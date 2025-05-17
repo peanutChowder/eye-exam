@@ -31,7 +31,8 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
         case confirmation(letterToConfirm: String)
     }
     private var currentMode: RecognitionMode = .letter
-    private let confirmationPhrases = ["yes", "yeah", "correct", "right", "no", "nope", "incorrect", "wrong"]
+    private let confirmationWords = ["yes", "correct", "continue", "right", "confirm"]
+    private let rejectionWords = ["no", "incorrect", "wrong", "deny"]
     
     // Keeps track of segments we've already processed
     private var lastProcessedSegmentIndex: Int = 0
@@ -94,12 +95,12 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
             throw NSError(domain: "SnellenSpeechRecognizer", code: -1, userInfo: nil)
         }
         
-        // Bias the recognizer towards letters or yes/no confirms
+        // Bias the recognizer towards letters or confirm/rejection words
         switch currentMode {
         case .letter:
             recognitionRequest.contextualStrings = validLetters
         case .confirmation:
-            recognitionRequest.contextualStrings = confirmationPhrases
+            recognitionRequest.contextualStrings = confirmationWords + rejectionWords
         }
         recognitionRequest.shouldReportPartialResults = true
         
@@ -196,7 +197,7 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
             Logger.log("Confirmation segment: \(segment.substring)")
             let response = segment.substring.lowercased()
             
-            if confirmationPhrases.contains(response) {
+            if confirmationWords.contains(response) {
                 Logger.log("User confirmed letter \(letter)")
                 currentMode = .letter
                 onLetterRecognized?(letter)
@@ -206,7 +207,7 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
                 return
             }
             
-            if ["no", "nope", "incorrect", "wrong"].contains(response) {
+            if rejectionWords.contains(response) {
                 Logger.log("User rejected letter \(letter)")
                 currentMode = .letter
                 DispatchQueue.main.async { [weak self] in
@@ -267,12 +268,12 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
         pauseAudioEngine()
 
         currentMode = .confirmation(letterToConfirm: letter)
-        let prompt = "Did you say\n\(letter)?"
+        let prompt = "Did you say\n\(letter)? Say confirm or deny."
         let utterance = AVSpeechUtterance(string: prompt)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
 
         DispatchQueue.main.async { [weak self] in
-            self?.overlayMessage = prompt
+            self?.overlayMessage = "Did you say\n\(letter)?\nConfirm/Deny"
         }
 
         return await withCheckedContinuation { continuation in
