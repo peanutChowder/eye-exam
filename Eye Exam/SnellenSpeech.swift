@@ -21,7 +21,8 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     private let commonConfusions: [String: String] = [
         "oh": "O",
         "see": "C",
-        "pee": "P"
+        "pee": "P",
+        "in": "N"
         ]
     var onLetterRecognized: ((String) -> Void)?
     
@@ -218,6 +219,9 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
                 DispatchQueue.main.async { [weak self] in
                     self?.overlayMessage = nil
                 }
+                
+                // Show confirmation overlay "Next letter"
+                speakAndShowConfirmation(letter)
                 return
             }
             
@@ -228,6 +232,35 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
                     self?.overlayMessage = nil
                 }
                 return
+            }
+        }
+    }
+    
+    private func speakAndShowConfirmation(_ letter: String) {
+        let message = "Next letter"
+        let utterance = AVSpeechUtterance(string: message)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+
+        // Show overlay first
+        DispatchQueue.main.async { [weak self] in
+            self?.overlayMessage = message
+        }
+
+        // Use continuation to wait for speech to finish
+        Task {
+            await withCheckedContinuation { continuation in
+                self.speechCompletionContinuation = continuation
+
+                if self.synthesizer.isSpeaking {
+                    self.synthesizer.stopSpeaking(at: .immediate)
+                }
+                self.synthesizer.speak(utterance)
+            }
+
+            // Once speech is done, clear overlay and trigger next letter
+            DispatchQueue.main.async { [weak self] in
+                self?.overlayMessage = nil
+                self?.onLetterRecognized?(letter)
             }
         }
     }
