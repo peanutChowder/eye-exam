@@ -22,7 +22,8 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
         "oh": "O",
         "see": "C",
         "pee": "P",
-        "in": "N"
+        "in": "N",
+        "tea": "T"
         ]
     var onLetterRecognized: ((String) -> Void)?
     
