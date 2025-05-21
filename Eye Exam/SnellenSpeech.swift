@@ -39,7 +39,7 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     }
     private var currentMode: RecognitionMode = .letter
     private let confirmationWords = ["yes", "correct", "continue", "right", "confirm"]
-    private let rejectionWords = ["no", "incorrect", "wrong", "deny"]
+    private let rejectionWords = ["no", "incorrect", "wrong", "deny", "reject"]
     
     // Keeps track of segments we've already processed
     private var lastProcessedSegmentIndex: Int = 0
@@ -175,12 +175,13 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
     private func handleLetterRecognition(_ segments: [SFTranscriptionSegment]) {
         for segment in segments {
             Logger.log("Letter segment: \(segment.substring)")
+            let lowerSegment = segment.substring.lowercased()
             
             var letter: String!
-            if commonConfusions.keys.contains(segment.substring) {
-                letter = commonConfusions[segment.substring]
+            if commonConfusions.keys.contains(lowerSegment) {
+                letter = commonConfusions[lowerSegment]
             } else {
-                letter = segment.substring.uppercased()
+                letter = lowerSegment.uppercased()
             }
             
             
@@ -322,12 +323,12 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
         pauseAudioEngine()
 
         currentMode = .confirmation(letterToConfirm: letter)
-        let prompt = "Did you say\n\(letter)? Say confirm or deny."
+        let prompt = "Did you say\n\(letter)? Say confirm or reject."
         let utterance = AVSpeechUtterance(string: prompt)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
 
         DispatchQueue.main.async { [weak self] in
-            self?.overlayMessage = "Did you say\n\(letter)?\nConfirm/Deny"
+            self?.overlayMessage = "Did you say\n\(letter)?\nConfirm/Reject"
         }
 
         return await withCheckedContinuation { continuation in
