@@ -284,10 +284,16 @@ class SnellenSpeechHandler: NSObject, SFSpeechRecognizerDelegate, AVSpeechSynthe
             audioEngine.stop()
         }
         audioEngine.inputNode.removeTap(onBus: 0)
+        audioEngine.reset()
+        
         recognitionRequest?.endAudio()
         recognitionRequest = nil
         recognitionTask?.cancel()
+        recognitionTask?.finish()
         recognitionTask = nil
+        
+        try? AVAudioSession.sharedInstance()
+                    .setActive(false, options: .notifyOthersOnDeactivation)
         
         // Reset the processed-segment index in case we create a new session later
         lastProcessedSegmentIndex = 0

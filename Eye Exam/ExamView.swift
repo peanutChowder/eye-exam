@@ -105,6 +105,9 @@ struct EyeExamView: View {
         .onAppear {
             setupSpeechRecognition()
         }
+        .onDisappear {
+            speechRecognizer.stopRecording()
+        }
         .animation(.easeInOut, value: distanceChecker.isAtCorrectDistance)
         .animation(.easeInOut, value: speechRecognizer.overlayMessage != nil)
     }
